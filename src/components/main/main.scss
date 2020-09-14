@@ -1,3 +1,7 @@
+$border-radius: 0px 0px 10px 10px;
+$cover-width: 400px;
+$cover-height: 300px;
+
 .MainHeader {
   position: fixed;
   top:0;
@@ -41,10 +45,9 @@
   .MediaListVideo {
     position: relative;
     margin: 30px 10px 10px 10px;
-    border-radius: 0px 0px 15px 15px;
+    border-radius: $border-radius;
 
     .VideoTitle {
-      height: 15%;
       width: 100%;
       position: absolute;
       background-color: rgba(0,0,0, 0.75);
@@ -57,20 +60,47 @@
 
     .VideoDescription {
       position: absolute;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
       bottom: 10px;
       background-color: rgba(0,0,0, 0.75);
-      border-radius: 0px 0px 15px 15px;
-      display: flex;
-      justify-content: center;
+      border-radius: $border-radius;
+      justify-items: center;
+      align-content: center;
       width: 100%;
+      height: auto;
 
-      h2 {
-        width: 80%;
+      .Description {
+        margin-top: 10px;
+        text-align: center;
+        width: $cover-width * 0.8;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      Button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 200px;
       }
     }
 
-    img {
-      border-radius: 0px 0px 15px 15px;
+    .ImageContainer {
+      display: flex;
+      justify-content: center;
+      width: $cover-width;
+      height: $cover-height;
+      background-color: #0a0a0a;
+      border-radius: $border-radius;
+
+      img {
+        width: auto;
+        height: 100%;
+        border-radius: $border-radius;
+      }
     }
   }
 }

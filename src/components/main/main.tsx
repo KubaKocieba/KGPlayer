@@ -23,6 +23,11 @@ const Main: React.FC = () => {
     const [selectedVideo, onVideoSelect] = useState<MediaListVideo>();
     const [mediaListError, setError] = useState<string>('');
 
+    const moreDescription = (event: React.MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     const showList = () => videolist.map((video: MediaListVideo) => (
         <motion.div
             onClick={() => onVideoSelect(video)}
@@ -34,17 +39,18 @@ const Main: React.FC = () => {
             key={video.Guid} id={video.Guid}
             itemID={video.Guid}>
             <div className="VideoTitle">
-                <motion.h1 variants={videoTitleMotion}>
+                <motion.h2 variants={videoTitleMotion}>
                     {video.Title} ({video.Year})
-                </motion.h1>
+                </motion.h2>
             </div>
-            <div>
+            <div className="ImageContainer">
                 <img src={video.Images[0].Url}
                      alt={video.Title +'||' + video.Description}
                 />
             </div>
             <motion.div variants={videoDescriptionMotion} className="VideoDescription">
-               <h2>{video.Description}</h2>
+                <div className="Description">{video.Description}</div>
+                <Button variant="outlined" color="secondary" onClick={moreDescription}>MORE</Button>
             </motion.div>
         </motion.div>
     ));
@@ -92,7 +98,7 @@ const Main: React.FC = () => {
                     { showList() }
                 </div>
             </div>
-            <motion.div className="PlayerContainer" animate={ selectedVideo ? "open": "closed"} variants={playerVariants}>
+            <motion.div className="PlayerContainer" animate={ selectedVideo ? "open": "closed"} initial={"closed"} variants={playerVariants}>
                 <Videoplayer closePlayer={handleVideoClose} selectedVideo={selectedVideo}/>
             </motion.div>
         </>
