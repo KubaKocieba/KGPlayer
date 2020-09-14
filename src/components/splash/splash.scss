@@ -1,0 +1,14 @@
+.Splash {
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999999999;
+  position: fixed;
+  top:0;
+  left: 0;
+  background-color: #616881;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}

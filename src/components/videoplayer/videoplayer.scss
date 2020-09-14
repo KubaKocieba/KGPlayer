@@ -1,0 +1,21 @@
+#video-controls {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95vw;
+  height: 5vh;
+  right: 2.5vw;
+  bottom: 8vh;
+  z-index: 2147483647;
+
+  #closeButton {
+    width: 180px;
+  }
+
+  .NavButtons {
+    display: flex;
+    column-gap: 15px;
+  }
+}

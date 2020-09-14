@@ -1,0 +1,102 @@
+import { Button } from "@material-ui/core";
+import React, { useContext, useEffect, useState } from 'react';
+import { AxiosResponse } from "axios";
+import { motion } from "framer-motion"
+
+import './main.scss';
+
+import axiosInstance from '../../endpoints/axios-instance-config';
+import { ENDPOINTS } from "../../endpoints/endpoints";
+import { MediaListVideo, MediaListResponse } from "../../interfaces/media-list.interfaces";
+import { playerVariants, videoDescriptionMotion, videoElementMotion, videoTitleMotion } from "./framer-motion.variants";
+import { Splash } from "../splash/splash";
+import Videoplayer from "../videoplayer/videoplayer";
+import Notification from "../notification/notification";
+import AppContext from "../../app-context";
+import { MEDIALISTMOCK } from "./media-list.mock";
+
+const Main: React.FC = () => {
+    const { URL, CONFIG, DATA } = ENDPOINTS.MEDIALIST
+    const { authorize } = useContext(AppContext);
+    const SIGNOUT = ENDPOINTS.AUTH;
+    const [videolist, setList] = useState<MediaListVideo[]>([...MEDIALISTMOCK]);
+    const [selectedVideo, onVideoSelect] = useState<MediaListVideo>();
+    const [mediaListError, setError] = useState<string>('');
+
+    const showList = () => videolist.map((video: MediaListVideo) => (
+        <motion.div
+            onClick={() => onVideoSelect(video)}
+            variants={videoElementMotion}
+            whileHover="hover"
+            initial="rest"
+            animate="rest"
+            className="MediaListVideo"
+            key={video.Guid} id={video.Guid}
+            itemID={video.Guid}>
+            <div className="VideoTitle">
+                <motion.h1 variants={videoTitleMotion}>
+                    {video.Title} ({video.Year})
+                </motion.h1>
+            </div>
+            <div>
+                <img src={video.Images[0].Url}
+                     alt={video.Title +'||' + video.Description}
+                />
+            </div>
+            <motion.div variants={videoDescriptionMotion} className="VideoDescription">
+               <h2>{video.Description}</h2>
+            </motion.div>
+        </motion.div>
+    ));
+
+    const fetchMediaList = () => {
+        axiosInstance.post<MediaListResponse>(URL, DATA, CONFIG).then(({ data }: AxiosResponse<MediaListResponse>) => {
+            const { Entities } = data;
+            setList([...videolist, ...Entities]);
+        }).catch((error) => {
+            setError('Something went wrong with loading Media List');
+        });
+    }
+
+    const signOut = () => {
+        // INSTRUCTIONS DIDN'T PROVIDE SUFFICIENT USR DATA, SO REQUEST WILL RESULT WITH 401
+        axiosInstance.post(SIGNOUT.URL.SIGNOUT, {},SIGNOUT.CONFIG).then(() => {
+            authorize(false);
+            window.sessionStorage.clear();
+        });
+    }
+
+    const handleVideoClose = () => {
+        onVideoSelect(undefined);
+    }
+
+    useEffect(() => {
+        fetchMediaList();
+    }, []);
+
+    return (
+        <>
+            <Splash />
+            <Notification severity={'error'} message={mediaListError} setMessage={setError} />
+            <div className="MainHeader">
+                <div className="Header">
+                    <img src="kg_logo.png" height="80%" width="auto" alt="Kocia Gęba Player"/>
+                    <div>
+                        <Button variant="outlined" color="secondary" onClick={signOut}>SIGN OUT</Button>
+                    </div>
+                </div>
+                <h1>What you can watch...</h1>
+            </div>
+            <div className="MainContent">
+                <div className="MediaList">
+                    { showList() }
+                </div>
+            </div>
+            <motion.div className="PlayerContainer" animate={ selectedVideo ? "open": "closed"} variants={playerVariants}>
+                <Videoplayer closePlayer={handleVideoClose} selectedVideo={selectedVideo}/>
+            </motion.div>
+        </>
+    );
+}
+
+export default Main;
