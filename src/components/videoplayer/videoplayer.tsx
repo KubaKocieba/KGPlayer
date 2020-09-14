@@ -91,7 +91,7 @@ const Videoplayer: React.FC<VideoPlayerProps> = ({ closePlayer, selectedVideo}) 
         <div>
             <Notification message={videoLoadError} severity={'error'} setMessage={setVideoLoadError} />
             <motion.div onMouseEnter={controlsShow}
-                        id="video-controls"
+                        id="videoControls"
                         animate={animate}
                         variants={extraControlsMotion}>
                 <div>
