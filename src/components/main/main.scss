@@ -1,6 +1,10 @@
 $border-radius: 0px 0px 10px 10px;
 $cover-width: 400px;
-$cover-height: 300px;
+$cover-height: 225px;
+
+@mixin round-border{
+  border-radius: $border-radius;
+}
 
 .MainHeader {
   position: fixed;
@@ -22,7 +26,7 @@ $cover-height: 300px;
     }
   }
 
-  h1 {
+  h2 {
     padding-top: 10px;
     padding-left: 50px;
     margin-bottom: 0px;
@@ -45,7 +49,7 @@ $cover-height: 300px;
   .MediaListVideo {
     position: relative;
     margin: 30px 10px 10px 10px;
-    border-radius: $border-radius;
+    @include round-border;
 
     .VideoTitle {
       width: 100%;
@@ -56,6 +60,10 @@ $cover-height: 300px;
       display: flex;
       justify-content: center;
       align-content: center;
+      justify-items: center;
+      align-items: center;
+      flex-wrap: wrap;
+      text-align: center;
     }
 
     .VideoDescription {
@@ -64,9 +72,9 @@ $cover-height: 300px;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
-      bottom: 10px;
+      bottom: 0;
       background-color: rgba(0,0,0, 0.75);
-      border-radius: $border-radius;
+      @include round-border;
       justify-items: center;
       align-content: center;
       width: 100%;
@@ -94,12 +102,12 @@ $cover-height: 300px;
       width: $cover-width;
       height: $cover-height;
       background-color: #0a0a0a;
-      border-radius: $border-radius;
+      @include round-border;
 
       img {
-        width: auto;
+        width: 100%;
         height: 100%;
-        border-radius: $border-radius;
+        @include round-border;
       }
     }
   }

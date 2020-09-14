@@ -13,13 +13,12 @@ import { Splash } from "../splash/splash";
 import Videoplayer from "../videoplayer/videoplayer";
 import Notification from "../notification/notification";
 import AppContext from "../../app-context";
-import { MEDIALISTMOCK } from "./media-list.mock";
 
 const Main: React.FC = () => {
     const { URL, CONFIG, DATA } = ENDPOINTS.MEDIALIST
-    const { authorize } = useContext(AppContext);
+    const { setToken } = useContext(AppContext);
     const SIGNOUT = ENDPOINTS.AUTH;
-    const [videolist, setList] = useState<MediaListVideo[]>([...MEDIALISTMOCK]);
+    const [videolist, setList] = useState<MediaListVideo[]>([]);
     const [selectedVideo, onVideoSelect] = useState<MediaListVideo>();
     const [mediaListError, setError] = useState<string>('');
 
@@ -28,7 +27,9 @@ const Main: React.FC = () => {
         event.stopPropagation();
     }
 
-    const showList = () => videolist.map((video: MediaListVideo) => (
+    const showList = () => videolist.map((video: MediaListVideo) => {
+        return(
+
         <motion.div
             onClick={() => onVideoSelect(video)}
             variants={videoElementMotion}
@@ -39,21 +40,25 @@ const Main: React.FC = () => {
             key={video.Guid} id={video.Guid}
             itemID={video.Guid}>
             <div className="VideoTitle">
-                <motion.h2 variants={videoTitleMotion}>
-                    {video.Title} ({video.Year})
-                </motion.h2>
+                <motion.h4 variants={videoTitleMotion}>
+                    {video.Title} { video.Year ? `(${video.Year})` : ''}
+                </motion.h4>
             </div>
             <div className="ImageContainer">
-                <img src={video.Images[0].Url}
-                     alt={video.Title +'||' + video.Description}
-                />
+                {
+                    !!video.Images[0] &&
+                    (<img src={video.Images[0].Url}
+                     alt={video.Title +'||' + video.Description} />)
+                }
             </div>
-            <motion.div variants={videoDescriptionMotion} className="VideoDescription">
-                <div className="Description">{video.Description}</div>
-                <Button variant="outlined" color="secondary" onClick={moreDescription}>MORE</Button>
-            </motion.div>
+            {   video.Description &&
+                <motion.div variants={videoDescriptionMotion} className="VideoDescription">
+                    <div className="Description">{video.Description}</div>
+                    <Button variant="outlined" color="secondary" onClick={moreDescription}>MORE</Button>
+                </motion.div>
+            }
         </motion.div>
-    ));
+    )});
 
     const fetchMediaList = () => {
         axiosInstance.post<MediaListResponse>(URL, DATA, CONFIG).then(({ data }: AxiosResponse<MediaListResponse>) => {
@@ -67,7 +72,7 @@ const Main: React.FC = () => {
     const signOut = () => {
         // INSTRUCTIONS DIDN'T PROVIDE SUFFICIENT USR DATA, SO REQUEST WILL RESULT WITH 401
         axiosInstance.post(SIGNOUT.URL.SIGNOUT, {},SIGNOUT.CONFIG).then(() => {
-            authorize(false);
+            setToken(false);
             window.sessionStorage.clear();
         });
     }
@@ -91,7 +96,7 @@ const Main: React.FC = () => {
                         <Button variant="outlined" color="secondary" onClick={signOut}>SIGN OUT</Button>
                     </div>
                 </div>
-                <h1>What you can watch...</h1>
+                <h2>What you can watch...</h2>
             </div>
             <div className="MainContent">
                 <div className="MediaList">

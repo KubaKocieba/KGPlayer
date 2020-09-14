@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AxiosRequestConfig } from "axios";
 
 import './App.scss';
@@ -10,18 +10,18 @@ import axiosInstance from './endpoints/axios-instance-config';
 import { Splash } from "./components/splash/splash";
 
 function App() {
-  const { authorized } = useContext(AppContext);
-  const [ isAuthorized, authorize ] = useState(authorized);
+  const { token } = useContext(AppContext);
+  const [ currentToken, setToken ] = useState(token);
   const [ finishedLoading, isLoadingDone ] = useState(false);
 
   const addTokenToRequest = (config: AxiosRequestConfig) => {
-      if (authorized) {
-        config.headers.Authorization = 'Bearer ' + authorized;
+      if (token) {
+        config.headers.Authorization = 'Bearer ' + token;
       }
       return config;
   }
 
-    if (!!authorized) {
+    if (!!token) {
         axiosInstance.interceptors.request.use(addTokenToRequest)
     }
 
@@ -38,11 +38,11 @@ function App() {
     });
 
   return (
-      <AppContext.Provider value={{ authorized: isAuthorized, authorize, loading: !finishedLoading, loadingIsDone: isLoadingDone }}>
+      <AppContext.Provider value={{ token: currentToken, setToken, loading: !finishedLoading, loadingIsDone: isLoadingDone }}>
         <div className="App">
             <Splash />
             <AppContext.Consumer>
-             { ({ authorized}) => authorized ? <Main /> : <Login /> }
+             { ({ token}) => token ? <Main /> : <Login /> }
             </AppContext.Consumer>
         </div>
       </AppContext.Provider>

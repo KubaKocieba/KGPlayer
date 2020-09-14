@@ -1,8 +1,8 @@
 import React from "react";
 
 const AppContext = React.createContext({
-        authorized: window.sessionStorage.getItem('authToken') || false,
-        authorize: (value: string | boolean) => {},
+        token: window.sessionStorage.getItem('authToken') || false,
+        setToken: (value: string | boolean) => {},
         loading: true,
         loadingIsDone: (value: boolean) => {}
 });

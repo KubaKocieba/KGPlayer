@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     const handleMouseDownPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
     };
-    const { authorize, loadingIsDone } = useContext(AppContext);
+    const { setToken, loadingIsDone } = useContext(AppContext);
 
     const handleSplashFormSubmit = (event: any) => {
       event.preventDefault();
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
             const { Result } = data;
             const { Token } = Result.AuthorizationToken;
             window.sessionStorage.setItem('authToken', Token);
-            authorize(Token);
+            setToken(Token);
       }).catch((error) => {
           console.log(error);
           setErrorMessage("Something went wrong with logging in");
